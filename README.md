@@ -1,10 +1,16 @@
 <div align="center">
-<a href="https://nav.jianzhugo.cn"><img height="100px" alt="logo" src="https://nav.jianzhugo.cn/img/logo.png"></a>
+<a href="https://nav.shuichanga.cn"><img height="100px" alt="logo" src="https://nav.shuichanga.cn/img/logo.png"></a>
   <p style="color:blue;font-size:20px;">Simple NAV</p>
   <p><em>自用简约的网址导航站，完全用AI采用vue框架开发。导航数据通过维基云表格编辑，无需数据库，无需后端，简单且方便。</em></p>
+  <div>
+    <img src="https://img.shields.io/github/stars/jianzhugo/Simple-Nav?style=flat-square&color=yellow" alt="GitHub Stars">
+    <img src="https://img.shields.io/github/forks/jianzhugo/Simple-Nav?style=flat-square&color=green" alt="GitHub Forks">    
+    <img src="https://img.shields.io/badge/built%20with-Vue%203-green?style=flat-square" alt="Built with Vue 3">
+    <img src="https://img.shields.io/badge/tailwindcss-v2.2.19-blue?style=flat-square" alt="Tailwind CSS">
+  </div>
 </div>
 
----
+***
 
 ## 功能特点
 
@@ -17,18 +23,19 @@
 - [x] 自定义分类图标
 - [x] 新增配置导入导出功能，支持选择导入导出项
 - [x] 新增直接增加网址功能，无需编辑表格
+- [x] 网站收藏功能，支持快速访问常用网站
 
 ## 演示站
 
-<https://nav.jianzhugo.cn>
+[https://nav.shuichanga.cn](https://nav.shuichanga.cn)
 
-![演示站](https://nav.jianzhugo.cn/img/demo1.png)
+!\[演示站]\(https\://nav.shuichanga.cn/img/demo1.png null)
 
 ## 维基云表格
 
 [表格链接](https://vika.cn/share/shrxaWuBbbn6cKWBwvXgV/dstfGaY66aN2wyLlmX/viwullRf3ubdS)
 
-![表格](https://nav.jianzhugo.cn/img/demo2.png)
+!\[表格]\(https\://nav.shuichanga.cn/img/demo2.png null)
 
 ## 安装布署
 
@@ -38,7 +45,7 @@
 
 我自己是使用的腾讯 EdgeOne Pages 布署的，免费快速。
 
-1、Fork项目（https://github.com/jianzhugo/Simple-Nav）
+1、Fork项目（<https://github.com/jianzhugo/Simple-Nav）>
 
 2、打开下方 EdgeOne Pages 地址
 
@@ -48,26 +55,27 @@
 
 4、在构建部署配置中按下图填写，然后点完成就可以了。
 
-![配置](https://nav.jianzhugo.cn/img/demo3.png)
+!\[配置]\(https\://nav.shuichanga.cn/img/demo3.png null)
 
-5、在项目设置中，将“环境变量”中的“VITE_API_PASSWORD”设置为你自己的密码。（用于直接增加网址功能）
+5、在项目设置中，将“环境变量”中的“VITE\_API\_PASSWORD”设置为你自己的密码。（用于直接增加网址功能）
 
 #### 二、改数据
 
 1、在维基云注册账号，新建表格。表格格式如下
 
-![格式](https://nav.jianzhugo.cn/img/demo4.png)
+!\[格式]\(https\://nav.shuichanga.cn/img/demo4.png null)
 
 2、获取表格的APIkey、datasheetId、viewId
 
-![获取](https://nav.jianzhugo.cn/img/demo7.png)
+!\[获取]\(https\://nav.shuichanga.cn/img/demo7.png null)
 
 ### 配置方法
 
 #### 方法一：通过设置界面配置
+
 在设置中填入相应的APIkey、datasheetId、viewId。
 
-![api](https://cdn.jsdmirror.com/gh/jianzhugo/image01/20251217130610676.png)
+!\[api]\(https\://cdn.jsdmirror.com/gh/jianzhugo/image01/20251217130610676.png null)
 
 #### 方法二：通过环境变量配置
 
@@ -91,7 +99,7 @@ VITE_VIKA_VIEW_ID=your_view_id_here
 
 在设置中自定义分类图标。
 
-![图标映射](https://cdn.jsdmirror.com/gh/jianzhugo/image01/20251217130740909.png)
+!\[图标映射]\(https\://cdn.jsdmirror.com/gh/jianzhugo/image01/20251217130740909.png null)
 
 4、配置导入导出
 
@@ -101,10 +109,12 @@ VITE_VIKA_VIEW_ID=your_view_id_here
 - 导出配置会生成JSON文件，包含所选配置项
 - 导入配置支持从JSON文件读取配置并应用
 - 默认不导出API配置，保护敏感信息
+
 ## 直接增加网址
 
 点击右上角的“+”号，输入网址和分类，即可直接增加网址。（需验证密码）
-![api](https://nav.jianzhugo.cn/img/zengjiawangzhi.png)
+!\[api]\(https\://nav.shuichanga.cn/img/zengjiawangzhi.png null)
+
 ## 其它
 
 根据自己需要修改关于页面及其它界面代码。

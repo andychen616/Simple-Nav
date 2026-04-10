@@ -16,6 +16,19 @@
         {{ item.description }}
       </p>
     </div>
+    
+    <!-- 收藏按钮 -->
+    <button 
+      @click.prevent.stop="toggleFavorite" 
+      class="favorite-btn absolute top-1 right-1 cursor-pointer transition-all duration-300 z-10"
+      :class="{
+        'text-yellow-500 opacity-50': isFavorite,
+        'text-gray-400 opacity-0 hover:opacity-100': !isFavorite
+      }"
+      style="font-size: 18px; padding: 4px; background: none; border: none;"
+    >
+      <i class="fas fa-star"></i>
+    </button>
   </a>
 </template>
 
@@ -52,10 +65,53 @@
   50% { border-color: rgba(168, 85, 247, 0.8); }
   100% { border-color: rgba(147, 51, 234, 0.5); }
 }
+
+.favorite-btn {
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 18px;
+  padding: 4px;
+  z-index: 10;
+  position: relative;
+}
+
+/* 确保未收藏的按钮在卡片悬停时显示 */
+.card-container:hover .favorite-btn:not(.text-yellow-500) {
+  opacity: 1 !important;
+}
 </style>
 
 <script>
 export default {
   props: ['item'],
+  data() {
+    return {
+      favoriteItems: JSON.parse(localStorage.getItem('favoriteItems')) || []
+    };
+  },
+  computed: {
+    isFavorite() {
+      return this.favoriteItems.includes(this.item.id);
+    }
+  },
+  methods: {
+    toggleFavorite() {
+      let favorites = JSON.parse(localStorage.getItem('favoriteItems')) || [];
+      const itemId = this.item.id;
+      
+      if (favorites.includes(itemId)) {
+        favorites = favorites.filter(id => id !== itemId);
+      } else {
+        favorites.push(itemId);
+      }
+      
+      localStorage.setItem('favoriteItems', JSON.stringify(favorites));
+      this.favoriteItems = favorites;
+      
+      // 触发自定义事件，通知父组件收藏状态变化
+      this.$emit('favorite-changed');
+    }
+  }
 };
 </script>

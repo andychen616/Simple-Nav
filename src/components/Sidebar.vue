@@ -102,6 +102,11 @@ export default {
       this.$emit('select-category', category);
     },
     getCategoryIcon(category) {
+      // 为收藏分类添加特殊图标
+      if (category === '我的收藏') {
+        return 'fas fa-star';
+      }
+      
       // 从localStorage读取图标映射
       const savedIcons = localStorage.getItem('categoryIcons');
       const iconMap = savedIcons ? JSON.parse(savedIcons) : {};

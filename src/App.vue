@@ -52,7 +52,7 @@
             >
               <template v-for="(item, index) in filteredItems" :key="item.id">
                 <!-- 卡片必须放在广告条件判断之前 -->
-                <Card :item="item" />
+                <Card :item="item" @favorite-changed="handleFavoriteChanged" />
                 <!-- 修正广告显示逻辑 -->
                 <AdBanner 
                   v-if="index === 9" 
@@ -108,6 +108,10 @@ export default {
   computed: {
     filteredItems() {
       if (!this.selectedCategory) return this.items;
+      if (this.selectedCategory === '我的收藏') {
+        const favoriteIds = JSON.parse(localStorage.getItem('favoriteItems')) || [];
+        return this.items.filter(item => favoriteIds.includes(item.id));
+      }
       return this.items.filter(item => item.category === this.selectedCategory);
     },
   },
@@ -119,9 +123,13 @@ export default {
         const data = await fetchData();
         console.log('Loaded data:', data);
         this.items = data;
-        this.categories = [...new Set(data.map(item => item.category))];
+        this.categories = ['我的收藏', ...new Set(data.map(item => item.category))];
         // 将分类信息存储到localStorage，供设置页使用
         localStorage.setItem('appCategories', JSON.stringify(this.categories));
+        // 确保收藏分类始终存在
+        if (!this.categories.includes('我的收藏')) {
+          this.categories.unshift('我的收藏');
+        }
       } catch (error) {
         console.error('数据加载失败:', error);
         this.error = error.message;
@@ -187,6 +195,10 @@ export default {
       this.isSidebarCollapsed = window.innerWidth < 768
       // 添加调试日志（可选）
       console.log('窗口尺寸变化:', window.innerWidth, '侧边栏状态:', this.isSidebarCollapsed)
+    },
+    handleFavoriteChanged() {
+      // 当收藏状态变化时，重新计算筛选结果
+      this.$forceUpdate();
     }
   },
   watch: {
