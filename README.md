@@ -27,7 +27,7 @@
 
 ## 演示站
 
-[https://nav.shuichanga.cn](https://nav.shuichanga.cn)
+<https://nav.shuichanga.cn>
 
 ![演示站](https://nav.shuichanga.cn/img/demo1.png)
 
@@ -84,10 +84,12 @@
 - `VITE_VIKA_API_KEY`：维格云 API 密钥
 - `VITE_VIKA_DATASHEET_ID`：维格云表格 ID
 - `VITE_VIKA_VIEW_ID`：维格云视图 ID
+- `VITE_SUBMIT_PASSWORD`：右上角直接增加网址功能的密码
 
 **配置示例**（.env 文件）：
 
 ```env
+VITE_SUBMIT_PASSWORD=你的密码
 VITE_VIKA_API_KEY=your_api_key_here
 VITE_VIKA_DATASHEET_ID=your_datasheet_id_here
 VITE_VIKA_VIEW_ID=your_view_id_here
@@ -113,7 +115,7 @@ VITE_VIKA_VIEW_ID=your_view_id_here
 ## 直接增加网址
 
 点击右上角的“+”号，输入网址和分类，即可直接增加网址。（需验证密码）
-![api](https://nav.shuichanga.cn/img/zengjiawangzhi.png )
+![api](https://nav.shuichanga.cn/img/zengjiawangzhi.png)
 
 ## 其它
 
