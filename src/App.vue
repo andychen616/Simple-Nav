@@ -2,7 +2,6 @@
   <div class="h-screen flex flex-col">
     <router-view :categories="categories"></router-view>
     <div class="flex flex-1 overflow-hidden relative">
-      <!-- 修改 Sidebar 传入的数据 -->
       <Sidebar 
         :parent-categories="parentCategories"
         :parent-to-categories="parentToCategories"
@@ -18,13 +17,22 @@
           @toggle-dark-mode="toggleDarkMode" 
           @submit-website="handleSubmitWebsite"
           class="mb-6"/>
-        
-        <!-- 右侧横排子分类，加了大分类标题 -->
+
+        <!-- 右侧横排子分类 -->
         <div v-if="currentChildCategories.length" class="flex flex-wrap items-center gap-2 mb-6">
-          <!-- 这里就是你要的大分类标签 -->
-          <span class="text-sm font-semibold text-purple-600 dark:text-purple-400 mr-1">
+          <span class="text-lg font-bold text-red-600 dark:text-red-400 mr-2">
             {{ currentParentName }}丨
           </span>
+
+  <button
+    v-for="cat in currentChildCategories"
+    :key="cat"
+    @click="filterByCategory(cat)"
+    class="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+  >
+    {{ cat }}
+  </button>
+</div>
 
           <button
             v-for="cat in currentChildCategories"
@@ -111,12 +119,13 @@ export default {
       columns: parseInt(localStorage.getItem('columns')) || 5,
       items: [],
       categories: [],
-      // 大分类相关数据
       parentCategories: [],
       parentToCategories: {},
       currentChildCategories: [],
-      currentParentName: '', // 当前大分类名称
+      currentParentName: '',
       selectedCategory: null,
+      // 🔥 新增：记录当前选中的大分类
+      selectedParent: null,
       darkMode: localStorage.getItem('darkMode') === 'true',
       isSidebarCollapsed: window.innerWidth < 768,
       loading: false,
@@ -125,16 +134,22 @@ export default {
   },
   computed: {
     filteredItems() {
-      // 严格根据选中的子分类过滤
-      if (!this.selectedCategory) return []; // 这里改成空数组，不默认显示全部
-
-      if (this.selectedCategory === '我的收藏') {
-        const favoriteIds = JSON.parse(localStorage.getItem('favoriteItems')) || [];
-        return this.items.filter(item => favoriteIds.includes(item.id));
+      // 1. 选中 小分类 → 只显示小分类
+      if (this.selectedCategory) {
+        if (this.selectedCategory === '我的收藏') {
+          const favoriteIds = JSON.parse(localStorage.getItem('favoriteItems')) || [];
+          return this.items.filter(item => favoriteIds.includes(item.id));
+        }
+        return this.items.filter(item => item.category === this.selectedCategory);
       }
 
-      // 只返回匹配当前子分类的网站
-      return this.items.filter(item => item.category === this.selectedCategory);
+      // 2. 选中 大分类 → 显示大分类下所有
+      if (this.selectedParent) {
+        return this.items.filter(item => item.parentCategory === this.selectedParent);
+      }
+
+      // 3. 都没选 → 显示全部
+      return this.items;
     },
   },
   methods: {
@@ -147,7 +162,6 @@ export default {
         this.items = data;
         this.categories = ['我的收藏', ...new Set(data.map(item => item.category))];
         
-        // 加载大分类数据
         this.parentCategories = websiteData.parentCategories;
         this.parentToCategories = websiteData.parentToCategories;
         
@@ -163,27 +177,24 @@ export default {
       }
     },
 
-    // 点击大分类，自动选中第一个子分类 + 记录大分类名称
+    // 🔥 点击大分类 → 显示全部
     handleSelectParent(parent) {
-      this.currentParentName = parent; // 保存大分类名称
+      this.currentParentName = parent;
+      this.selectedParent = parent;
+      this.selectedCategory = null;
       this.currentChildCategories = this.parentToCategories[parent] || [];
-      if (this.currentChildCategories.length > 0) {
-        this.selectedCategory = this.currentChildCategories[0];
-      }
     },
     
-    // 点击子分类后强制更新视图
+    // 点击小分类 → 只显示小分类
     filterByCategory(category) {
       this.selectedCategory = category;
+      this.selectedParent = null;
       this.$forceUpdate();
     },
+
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
-      if (this.darkMode) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
+      this.darkMode ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark');
       localStorage.setItem('darkMode', this.darkMode);
     },
     toggleSidebar() {
@@ -201,9 +212,9 @@ export default {
     handleGlobalClick(event) {
       const sidebar = document.querySelector('.sidebar-container');
       const cards = document.querySelectorAll('.card-container');
-      if (!sidebar.contains(event.target) && 
-          !Array.from(cards).some(card => card.contains(event.target))) {
+      if (!sidebar.contains(event.target) && !Array.from(cards).some(card => card.contains(event.target))) {
         this.selectedCategory = null;
+        this.selectedParent = null;
       }
     },
     handleResize() {
@@ -222,13 +233,9 @@ export default {
     this.loadData();
   },
   mounted() {
-    if (this.darkMode) {
-      document.documentElement.classList.add('dark');
-    }
+    if (this.darkMode) document.documentElement.classList.add('dark');
     const savedColumns = localStorage.getItem('columns')
-    if (savedColumns) {
-      this.columns = parseInt(savedColumns)
-    }
+    if (savedColumns) this.columns = parseInt(savedColumns)
     const savedBg = localStorage.getItem('background')
     const savedImage = localStorage.getItem('backgroundImage')
     if (savedBg) {
