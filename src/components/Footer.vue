@@ -10,7 +10,7 @@
 export default {
   data() {
     return {
-      startDate: new Date('2025-03-01'),
+      startDate: new Date('2026-04-30'),
       currentYear: new Date().getFullYear(),
       now: new Date() // 新增当前时间响应式数据
     };
