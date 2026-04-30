@@ -1,8 +1,9 @@
 <template>
-  <div v-if="visible" class="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50">
+  <!-- 去掉多余冲突样式，改为标准全屏居中 -->
+  <div v-if="visible" class="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50">
 
-    <!--这里加了 m-auto，完美居中不遮挡 -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 max-w-md w-full mx-4 m-auto overflow-y-auto max-h-[90vh]">
+    <!-- 删除 m-auto，保持简洁居中 -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 max-w-md w-full mx-4 overflow-y-auto max-h-[90vh]">
       
       <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">
         <i class="fas fa-plus-circle mr-2"></i> 网址添加
