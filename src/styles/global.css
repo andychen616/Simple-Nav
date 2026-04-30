@@ -101,3 +101,13 @@
 .dark .dark\:hover\:bg-gray-700:hover {
   background-color: #374151 !important;
 }
+
+/* 半透明毛玻璃效果 */
+.backdrop-blur-light {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+.dark .backdrop-blur-light {
+  background-color: rgba(17, 24, 39, 0.15) !important;
+}
