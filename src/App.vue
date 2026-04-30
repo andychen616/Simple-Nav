@@ -33,7 +33,7 @@
 
         <div class="flex-grow">
           <div v-if="loading" class="flex items-center justify-center h-64">
-            <div class="text-gray-500 dark:text-gray-400">
+            <div class="text-gray-50 dark:text-gray-400">
               <i class="fas fa-spinner fa-spin mr-2"></i>正在加载数据...
             </div>
           </div>
@@ -119,11 +119,15 @@ export default {
   },
   computed: {
     filteredItems() {
-      if (!this.selectedCategory) return this.items;
+      // 严格根据选中的子分类过滤
+      if (!this.selectedCategory) return []; // 这里改成空数组，不默认显示全部
+
       if (this.selectedCategory === '我的收藏') {
         const favoriteIds = JSON.parse(localStorage.getItem('favoriteItems')) || [];
         return this.items.filter(item => favoriteIds.includes(item.id));
       }
+
+      // 只返回匹配当前子分类的网站
       return this.items.filter(item => item.category === this.selectedCategory);
     },
   },
@@ -153,13 +157,18 @@ export default {
       }
     },
 
-    // 点击大分类：显示右侧子分类
+    // 点击大分类，自动选中第一个子分类
     handleSelectParent(parent) {
       this.currentChildCategories = this.parentToCategories[parent] || [];
+      if (this.currentChildCategories.length > 0) {
+        this.selectedCategory = this.currentChildCategories[0];
+      }
     },
     
+    // 点击子分类后强制更新视图
     filterByCategory(category) {
       this.selectedCategory = category;
+      this.$forceUpdate();
     },
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
