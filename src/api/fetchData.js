@@ -2,6 +2,14 @@ const baseUrl = 'https://api.vika.cn/fusion/v1/datasheets';
 const fieldKey = 'name';
 const DEFAULT_ICON_URL = '/default.ico';
 
+// 全局数据结构（兼容原有代码 + 新增父分类）
+export const websiteData = {
+  originalList: [],       // 原始网站列表（原有）
+  parentCategories: [],   // 大分类 parentCategory
+  parentToCategories: {}, // 父分类 => 子分类列表
+  categoryToSites: {},    // 子分类 => 网站列表
+};
+
 export async function fetchData() {
   try {
     // 从localStorage读取API配置
@@ -42,54 +50,94 @@ export async function fetchData() {
       console.log('完整记录信息:', responseData.data.records[0]);
     }
     
-    return responseData.data.records.map(record => {
+    // 处理原始数据
+    const rawSites = responseData.data.records.map(record => {
       if (!record.fields || !record.fields.category || !record.fields.name) {
         console.warn('缺少必填字段的记录:', record);
         return null;
       }
       return {
         id: record.recordId,
+        parentCategory: record.fields.parentCategory || '未分类',  // 🔥 新增
         category: record.fields.category,
         name: record.fields.name,
         url: record.fields.url,
         description: record.fields.description || '',
         icon: record.fields.icon || DEFAULT_ICON_URL,
         sortOrder: record.fields.order ? parseInt(record.fields.order) : 0,
-        // 添加更新时间字段（如果API返回）
         updatedAt: record.updatedAt || record.fields.updatedAt || null
       };
-    }).filter(Boolean).sort((a, b) => b.sortOrder - a.sortOrder);  // 修改排序逻辑为降序
+    }).filter(Boolean).sort((a, b) => b.sortOrder - a.sortOrder);
+
+    // 保存原始数据
+    websiteData.originalList = rawSites;
+
+    // 核心：按 parentCategory 分组
+    groupDataByParentCategory(rawSites);
+
+    // 保持原有返回值不变，你的其他代码完全不用改
+    return rawSites;
+
   } catch (error) {
     console.error('数据获取失败:', {
       message: error.message,
       stack: error.stack,
       timestamp: new Date().toISOString()
     });
-    // 抛出错误，让调用方处理
     throw error;
   }
+}
+
+//数据分组函数（父分类、子分类、网站映射）
+function groupDataByParentCategory(sites) {
+  const parentSet = new Set();
+  const parentMap = {};
+  const siteMap = {};
+
+  sites.forEach(item => {
+    const { parentCategory, category, ...site } = item;
+
+    // 收集所有父分类
+    parentSet.add(parentCategory);
+
+    // 父分类 => 子分类
+    if (!parentMap[parentCategory]) {
+      parentMap[parentCategory] = new Set();
+    }
+    parentMap[parentCategory].add(category);
+
+    // 子分类 => 网站
+    if (!siteMap[category]) {
+      siteMap[category] = [];
+    }
+    siteMap[category].push(site);
+  });
+
+  // 赋值到全局
+  websiteData.parentCategories = Array.from(parentSet).sort();
+  websiteData.parentToCategories = Object.fromEntries(
+    Object.entries(parentMap).map(([k, v]) => [k, Array.from(v).sort()])
+  );
+  websiteData.categoryToSites = siteMap;
 }
 
 // 添加网址到维格云表格
 export async function addWebsite(websiteData) {
   try {
-    // 优先从环境变量获取API配置，回退到本地存储
     const apiKey = import.meta.env.VITE_VIKA_API_KEY || localStorage.getItem('apiKey');
     const datasheetId = import.meta.env.VITE_VIKA_DATASHEET_ID || localStorage.getItem('datasheetId');
     
-    // 检查配置是否完整
     if (!apiKey || !datasheetId) {
       throw new Error('API配置不完整，请前往设置页面配置');
     }
     
-    // 动态构建API URL，添加fieldKey参数
     const apiUrl = `${baseUrl}/${datasheetId}/records?fieldKey=name`;
     
-    // 构造请求体，添加fieldKey字段，order字段转换为字符串
     const requestBody = {
       records: [
         {
           fields: {
+            parentCategory: websiteData.parentCategory || '未分类',  // 🔥 同步新增
             category: websiteData.category,
             name: websiteData.name,
             url: websiteData.url,
@@ -135,7 +183,6 @@ export async function addWebsite(websiteData) {
       stack: error.stack,
       timestamp: new Date().toISOString()
     });
-    // 抛出错误，让调用方处理
     throw error;
   }
 }
