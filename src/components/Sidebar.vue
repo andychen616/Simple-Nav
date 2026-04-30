@@ -29,27 +29,27 @@
       </div>
 
       <ul>
-        <li v-for="category in categories" :key="category" class="mb-2">
+        <!-- 遍历 大分类 parentCategory -->
+        <li v-for="parent in parentCategories" :key="parent" class="mb-2">
           <button
-            @click="selectCategory(category)"
+            @click="selectParent(parent)"
             class="flex items-center w-full p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-gray-800 dark:text-gray-200"
-            @mouseenter="showTooltip(category, $event)"
-            @mouseleave="hideTooltip"
+            @mouseenter="showChildCategories(parent, $event)"
+            @mouseleave="hideChildCategories"
           >
-            <i class="fas" :class="getCategoryIcon(category)"></i>
-            <span class="ml-2" :class="{ 'hidden': isCollapsed }">{{ category }}</span>
+            <i class="fas" :class="getCategoryIcon(parent)"></i>
+            <span class="ml-2" :class="{ 'hidden': isCollapsed }">{{ parent }}</span>
             
-            <!-- 修改提示框为横向布局 -->
+            <!-- 悬停显示子分类浮层 -->
             <div 
-              v-if="hoveredCategory && isCollapsed"
-              class="absolute left-full ml-2 px-2 py-1 bg-gray-600 dark:bg-gray-200 text-white dark:text-gray-800 text-sm rounded-md shadow-md z-50 whitespace-nowrap"
+              v-if="showChildCategoryTooltip && currentHoverParent === parent"
+              class="absolute left-full ml-2 px-3 py-2 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm rounded-md shadow-lg z-50 min-w-[120px]"
               :style="{ top: tooltipPosition }"
             >
-              <div class="relative">
-                {{ hoveredCategory }}
-                <!-- 修改箭头方向 -->
-                <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-2 h-2 bg-gray-600 dark:bg-gray-200 transform rotate-45"></div>
+              <div v-for="cat in parentToCategories[parent]" :key="cat" class="py-1 px-1 hover:bg-gray-100 dark:hover:bg-gray-600 rounded cursor-pointer" @click.stop="selectCategory(cat)">
+                {{ cat }}
               </div>
+              <div class="absolute -left-3 top-3 w-2 h-2 bg-white dark:bg-gray-700 transform rotate-45"></div>
             </div>
           </button>
         </li>
@@ -63,8 +63,7 @@
       >
         <i class="fas" :class="isCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'"></i>
       </button>
-      <!-- 在侧边栏底部添加 -->
-      <!-- 修改此处，移除 p-4 内边距 -->
+      
       <div class="mt-auto">
         <router-link 
           to="/about" 
@@ -80,44 +79,46 @@
 
 <script>
 export default {
-  props: ['categories', 'isCollapsed'],
+  props: ['isCollapsed', 'parentCategories', 'parentToCategories'], // 接收大分类数据
   data() {
     return {
       showToggle: false,
-      hoveredCategory: null,
+      currentHoverParent: null,
+      showChildCategoryTooltip: false,
       tooltipPosition: '0px'
     };
   },
   methods: {
-    showTooltip(category, event) {
-      if (this.isCollapsed) {
-        this.hoveredCategory = category;
-        // 计算位置
-        const rect = event.currentTarget.getBoundingClientRect();
-        this.tooltipPosition = `${rect.top + window.scrollY + 8}px`;
-      }
+    // 悬停显示子分类
+    showChildCategories(parent, event) {
+      this.currentHoverParent = parent;
+      this.showChildCategoryTooltip = true;
+      const rect = event.currentTarget.getBoundingClientRect();
+      this.tooltipPosition = `${rect.top + window.scrollY + 8}px`;
     },
-    hideTooltip() {
-      this.hoveredCategory = null;
+    // 隐藏子分类
+    hideChildCategories() {
+      this.showChildCategoryTooltip = false;
+      this.currentHoverParent = null;
     },
+    // 点击大分类
+    selectParent(parent) {
+      this.$emit('select-parent', parent);
+    },
+    // 点击子分类
     selectCategory(category) {
       this.$emit('select-category', category);
     },
     getCategoryIcon(category) {
-      // 为收藏分类添加特殊图标
       if (category === '我的收藏') {
         return 'fas fa-star';
       }
-      
-      // 从localStorage读取图标映射
       const savedIcons = localStorage.getItem('categoryIcons');
       const iconMap = savedIcons ? JSON.parse(savedIcons) : {};
-      
-      // 如果有配置的图标，直接返回完整图标类名，否则返回默认图标
       return iconMap[category] || 'fas fa-question-circle';
     },
     resetCategory() {
-      this.$emit('select-category', null); // 发送null表示重置分类
+      this.$emit('select-category', null);
     },
   },
 };
@@ -134,9 +135,8 @@ button {
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* 添加过渡效果 */
 button:hover {
-  transition-delay: 0.1s; /* 提前触发悬停效果 */
+  transition-delay: 0.1s;
 }
 
 /* 提示框动画 */
