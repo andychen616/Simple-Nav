@@ -11,11 +11,11 @@
           </h1>
           <div class="prose dark:prose-invert">
             <div class="grid grid-cols-2 gap-6 mb-8">
-              <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+              <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow mb-6">
                 <i class="fas fa-rocket text-blue-500 text-xl mb-2"></i>
                 <h3 class="text-xl font-semibold mb-2">项目简介</h3>
                 <p class="text-gray-600 dark:text-gray-300">
-                  天若有情网址导航，是一个收录优质资源、清爽实用的个人导航站点。站点基于开源项目Simple-Nav搭建，数据管理依托维基云表格，部署服务由腾讯云EdgeOne 提供。
+                  &emsp;&emsp;天若有情网址导航，是一个收录优质资源、清爽实用的个人导航站点。站点基于开源项目Simple-Nav搭建，数据管理依托维基云表格，部署服务由腾讯云EdgeOne 提供。
                 </p>
               </div>
             </div>
