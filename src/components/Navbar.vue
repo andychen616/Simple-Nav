@@ -71,18 +71,6 @@
         <span class="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-center">设置</span>
       </div>
       
-      <!-- 新增GitHub图标 -->
-      <div class="relative group w-8 h-8 flex items-center justify-center">
-        <a 
-          href="https://github.com/jianzhugo/Simple-Nav" 
-          target="_blank"
-          class="w-full h-full flex items-center justify-center rounded-full text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300"
-        >
-          <i class="fab fa-github hover:rotate-12 transition-transform"></i>
-        </a>
-        <span class="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-center">GitHub</span>
-      </div>
-      
       <!-- 原有的暗黑模式切换按钮 -->
       <div class="relative group w-8 h-8 flex items-center justify-center">
         <button 
