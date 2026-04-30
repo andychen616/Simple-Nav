@@ -3,6 +3,12 @@
   color-scheme: dark;
 }
 
+/* 半透明毛玻璃全局兼容 */
+.backdrop-blur-sm {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
 /* 确保黑暗模式下的背景色和文字色 */
 .dark body {
   background-color: #111827 !important; /* gray-900 */
