@@ -1,7 +1,8 @@
 <template>
   <div class="relative h-full" ref="sidebar">
+    <!-- 修改背景为半透明+毛玻璃 -->
     <aside 
-      class="sidebar-container bg-white dark:bg-gray-800 rounded-lg shadow-lg h-full overflow-y-auto transition-all duration-300"
+      class="sidebar-container bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg shadow-lg h-full overflow-y-auto transition-all duration-300"
       :class="{
         'w-34 p-4': !isCollapsed,
         'min-w-[4rem] max-w-[4rem] px-2': isCollapsed
@@ -23,7 +24,7 @@
           :class="{ 'hidden': isCollapsed }"
           @click.native="resetCategory"
         >
-          Simple NAV
+          天若有情
         </router-link>
       </div>
 

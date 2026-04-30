@@ -164,8 +164,8 @@ export default {
       this.error = '';
       
       try {
-        // 从环境变量获取密码，默认值为123654
-        const correctPassword = import.meta.env.VITE_SUBMIT_PASSWORD || '123654';
+        // 从环境变量获取密码，默认值为860927
+        const correctPassword = import.meta.env.VITE_SUBMIT_PASSWORD || '860927';
         
         if (this.password === correctPassword) {
           // 密码正确，重置错误次数
