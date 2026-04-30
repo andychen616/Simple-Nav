@@ -19,8 +19,13 @@
           @submit-website="handleSubmitWebsite"
           class="mb-6"/>
         
-        <!-- 右侧横排子分类 -->
-        <div v-if="currentChildCategories.length" class="flex flex-wrap gap-2 mb-6">
+        <!-- 右侧横排子分类，加了大分类标题 -->
+        <div v-if="currentChildCategories.length" class="flex flex-wrap items-center gap-2 mb-6">
+          <!-- 这里就是你要的大分类标签 -->
+          <span class="text-sm font-semibold text-purple-600 dark:text-purple-400 mr-1">
+            {{ currentParentName }}丨
+          </span>
+
           <button
             v-for="cat in currentChildCategories"
             :key="cat"
@@ -110,6 +115,7 @@ export default {
       parentCategories: [],
       parentToCategories: {},
       currentChildCategories: [],
+      currentParentName: '', // 当前大分类名称
       selectedCategory: null,
       darkMode: localStorage.getItem('darkMode') === 'true',
       isSidebarCollapsed: window.innerWidth < 768,
@@ -157,8 +163,9 @@ export default {
       }
     },
 
-    // 点击大分类，自动选中第一个子分类
+    // 点击大分类，自动选中第一个子分类 + 记录大分类名称
     handleSelectParent(parent) {
+      this.currentParentName = parent; // 保存大分类名称
       this.currentChildCategories = this.parentToCategories[parent] || [];
       if (this.currentChildCategories.length > 0) {
         this.selectedCategory = this.currentChildCategories[0];
