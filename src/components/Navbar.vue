@@ -1,5 +1,6 @@
 <template>
-  <nav class="h-12 sticky top-0 z-30 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm shadow-md px-4 py-2 flex justify-between items-center">
+  <!-- 半透明+毛玻璃 -->
+  <nav class="h-12 sticky top-0 z-30 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm shadow-md px-4 py-2 flex justify-between items-center backdrop-blur-light">
     <!-- 修改为 router-link 以实现跳转 -->
     <router-link to="/" class="text-xl font-bold text-blue-500">
       <i class="fas fa-heart"></i> 实用导航·以简为美

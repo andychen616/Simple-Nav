@@ -1,8 +1,8 @@
 <template>
   <div class="relative h-full" ref="sidebar">
-    <!-- 修改背景为半透明+毛玻璃 -->
+    <!-- 半透明+毛玻璃 -->
     <aside 
-      class="sidebar-container bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg shadow-lg h-full overflow-y-auto transition-all duration-300"
+      class="sidebar-container bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg shadow-lg h-full overflow-y-auto transition-all duration-300 backdrop-blur-light"
       :class="{
         'w-34 p-4': !isCollapsed,
         'min-w-[4rem] max-w-[4rem] px-2': isCollapsed
@@ -10,7 +10,7 @@
       @mouseenter="showToggle = true"
       @mouseleave="showToggle = false">
       
-      <!-- 修改后的网站标题区域 -->
+      <!-- 网站标题区域 -->
       <div class="flex items-center" :class="{'mb-4 pl-2': !isCollapsed, 'py-3 justify-center': isCollapsed}">
         <router-link 
           to="/"
@@ -77,6 +77,7 @@
     </aside>
   </div>
 </template>
+
 <script>
 export default {
   props: ['categories', 'isCollapsed'],

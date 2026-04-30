@@ -1,6 +1,7 @@
 <template>
+  <!-- 只在这里增加了 backdrop-blur-light 半透明类，其余完全不动 -->
   <a :href="item.url" target="_blank" 
-     class="card-container flex items-start bg-white dark:bg-gray-700 p-3 sm:p-4 rounded shadow-md transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02] border-2 border-transparent relative">
+     class="card-container flex items-start bg-white dark:bg-gray-700 backdrop-blur-light p-3 sm:p-4 rounded shadow-md transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02] border-2 border-transparent relative">
     
     <!-- 调整图标大小 -->
     <img :src="item.icon" alt="icon" class="w-8 h-8 sm:w-12 sm:h-12 mr-3 sm:mr-4" />
