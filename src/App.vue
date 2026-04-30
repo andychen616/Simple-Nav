@@ -17,22 +17,13 @@
           @toggle-dark-mode="toggleDarkMode" 
           @submit-website="handleSubmitWebsite"
           class="mb-6"/>
-
+        
         <!-- 右侧横排子分类 -->
         <div v-if="currentChildCategories.length" class="flex flex-wrap items-center gap-2 mb-6">
+          <!-- 红色 + 加大字号 + 加粗 -->
           <span class="text-lg font-bold text-red-600 dark:text-red-400 mr-2">
             {{ currentParentName }}丨
           </span>
-
-  <button
-    v-for="cat in currentChildCategories"
-    :key="cat"
-    @click="filterByCategory(cat)"
-    class="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-  >
-    {{ cat }}
-  </button>
-</div>
 
           <button
             v-for="cat in currentChildCategories"
@@ -124,7 +115,6 @@ export default {
       currentChildCategories: [],
       currentParentName: '',
       selectedCategory: null,
-      // 🔥 新增：记录当前选中的大分类
       selectedParent: null,
       darkMode: localStorage.getItem('darkMode') === 'true',
       isSidebarCollapsed: window.innerWidth < 768,
@@ -177,7 +167,7 @@ export default {
       }
     },
 
-    // 🔥 点击大分类 → 显示全部
+    // 点击大分类 → 显示全部
     handleSelectParent(parent) {
       this.currentParentName = parent;
       this.selectedParent = parent;
