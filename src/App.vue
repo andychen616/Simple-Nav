@@ -8,6 +8,7 @@
         :isCollapsed="isSidebarCollapsed"
         @select-parent="handleSelectParent"
         @toggle-sidebar="toggleSidebar"
+        @select-category="filterByCategory"
       />
       <main class="flex-1 flex flex-col p-4 overflow-y-auto">
         <Navbar 
@@ -68,7 +69,7 @@
                 <Card :item="item" @favorite-changed="handleFavoriteChanged" />
                 <AdBanner 
                   v-if="index === 9" 
-                  class="col-span-full h-[120px] bg-blue-50 dark:bg-blue-900 mt-4"
+                  class="col-span-full h-[120px] bg-blue-900 mt-4"
                 />
               </template>
             </div>
@@ -178,6 +179,7 @@ export default {
     filterByCategory(category) {
       this.selectedCategory = category;
       this.selectedParent = null;
+      this.currentChildCategories = [];
     },
 
     toggleDarkMode() {
