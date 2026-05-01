@@ -18,8 +18,8 @@
           @submit-website="handleSubmitWebsite"
           class="mb-6"/>
         
-        <!-- 右侧横排子分类-->
-        <div class="flex flex-wrap items-center gap-2 mb-6">
+        <!-- 右侧横排子分类：只有选中大分类才显示 -->
+        <div v-if="currentParentName" class="flex flex-wrap items-center gap-2 mb-6">
           <!-- 红色 + 加大字号 + 加粗，永远显示 -->
           <span class="text-lg font-bold text-red-600 dark:text-red-400 mr-2">
             {{ currentParentName }}丨
@@ -220,10 +220,10 @@ export default {
   },
   created() {
     this.loadData();
-    // 默认选中第一个大分类
-    if (this.parentCategories.length > 0) {
-      this.handleSelectParent(this.parentCategories[0]);
-    }
+    // 移除：默认不选中任何分类
+    // if (this.parentCategories.length > 0) {
+    //   this.handleSelectParent(this.parentCategories[0]);
+    // }
   },
   mounted() {
     if (this.darkMode) document.documentElement.classList.add('dark');
