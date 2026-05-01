@@ -8,6 +8,7 @@
         :isCollapsed="isSidebarCollapsed"
         @toggle-sidebar="toggleSidebar"
         @select-parent="handleSelectParent"
+        @select-category="selectCategory"
       />
       <main class="flex-1 flex flex-col p-4 overflow-y-auto">
         <Navbar :darkMode="darkMode" @toggle-dark-mode="toggleDarkMode" class="mb-6"/>
@@ -120,6 +121,9 @@ export default {
     },
     handleSelectParent(parent) {
       // 空方法，兼容 Sidebar 事件
+    },
+    selectCategory(category) {
+      this.$router.push({ path: '/', query: { category } });
     }
   },
   async created() {
