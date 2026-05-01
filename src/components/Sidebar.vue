@@ -107,11 +107,9 @@ export default {
     },
     // 点击子分类
     selectCategory(category) {
-      // 1. 隐藏浮层
+      // 1. 点击后隐藏浮层
       this.hideChildCategories();
-      // 2. 路由跳转（给 App.vue 监听用）
-      this.$router.push({ path: '/', query: { category } });
-      // 3. 保留原有事件触发
+      // 2. 只给 App.vue 发事件，让它本地过滤
       this.$emit('select-category', category);
     },
     getCategoryIcon(category) {
@@ -124,7 +122,6 @@ export default {
     },
     // 重置分类
     resetCategory() {
-      this.$router.push({ path: '/' });
       this.$emit('select-category', null);
     },
   },
