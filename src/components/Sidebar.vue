@@ -29,7 +29,7 @@
       </div>
 
       <ul>
-        <!-- 遍历 大分类 parentCategory -->
+        <!-- 遍历大分类 parentCategory -->
         <li v-for="parent in parentCategories" :key="parent" class="mb-2">
           <button
             @click="selectParent(parent)"
@@ -107,7 +107,13 @@ export default {
     },
     // 点击子分类
     selectCategory(category) {
-      this.$emit('select-category', category);
+      // 跳转到首页，并带上分类参数
+      this.$router.push({
+        path: '/',
+        query: { category }
+      });
+      // 点击后隐藏浮层
+      this.hideChildCategories();
     },
     getCategoryIcon(category) {
       if (category === '我的收藏') {
@@ -117,8 +123,9 @@ export default {
       const iconMap = savedIcons ? JSON.parse(savedIcons) : {};
       return iconMap[category] || 'fas fa-question-circle';
     },
+    // 重置分类：跳回首页清空参数
     resetCategory() {
-      this.$emit('select-category', null);
+      this.$router.push({ path: '/' });
     },
   },
 };
