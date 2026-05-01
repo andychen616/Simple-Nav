@@ -1,6 +1,6 @@
 <template>
-  <div v-if="visible" class="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50">
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 max-w-md w-full mx-4">
+  <div v-if="visible" class="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 !m-0 !p-0">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 max-w-md w-full mx-4 !my-auto">
       <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">
         <i class="fas fa-lock mr-2"></i> 验证密码
       </h2>

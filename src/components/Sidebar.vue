@@ -20,7 +20,7 @@
         <!-- 添加 router-link 实现跳转 -->
         <router-link 
           to="/"
-          class="ml-2 font-bold text-purple-600 dark:text-purple-400"
+          class="ml-2 font-bold text-purple-600 dark:text-red-400"
           :class="{ 'hidden': isCollapsed }"
           @click.native="resetCategory"
         >
@@ -33,7 +33,7 @@
         <li v-for="parent in parentCategories" :key="parent" class="mb-2">
           <button
             @click="selectParent(parent)"
-            class="flex items-center w-full p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-gray-800 dark:text-gray-200"
+            class="flex items-center w-full p-2 rounded hover:bg-gray-100 dark:bg-gray-700 transition-colors text-gray-800 dark:text-gray-200"
             @mouseenter="showChildCategories(parent, $event)"
             @mouseleave="hideChildCategories"
           >
@@ -46,7 +46,7 @@
               class="absolute left-full ml-2 px-3 py-2 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm rounded-md shadow-lg z-50 min-w-[120px]"
               :style="{ top: tooltipPosition }"
             >
-              <div v-for="cat in parentToCategories[parent]" :key="cat" class="py-1 px-1 hover:bg-gray-100 dark:hover:bg-gray-600 rounded cursor-pointer" @click.stop="selectCategory(cat)">
+              <div v-for="cat in parentToCategories[parent]" :key="cat" class="py-1 px-1 hover:bg-gray-100 dark:bg-gray-600 rounded cursor-pointer" @click.stop="selectCategory(cat)">
                 {{ cat }}
               </div>
               <div class="absolute -left-3 top-3 w-2 h-2 bg-white dark:bg-gray-700 transform rotate-45"></div>
@@ -59,7 +59,7 @@
       <button 
         v-if="showToggle"
         @click="$emit('toggle-sidebar')"
-        class="absolute bottom-2 left-2 p-2 bg-white dark:bg-gray-800 rounded-full shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-gray-800 dark:text-gray-200"
+        class="absolute bottom-2 left-2 p-2 bg-white dark:bg-gray-800 rounded-full shadow-md hover:bg-gray-100 dark:bg-gray-700 transition-colors text-gray-800 dark:text-gray-200"
       >
         <i class="fas" :class="isCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'"></i>
       </button>
@@ -67,7 +67,7 @@
       <div class="mt-auto">
         <router-link 
           to="/about" 
-          class="flex items-center w-full p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-gray-800 dark:text-gray-200"
+          class="flex items-center w-full p-2 rounded hover:bg-gray-100 dark:bg-gray-700 transition-colors text-gray-800 dark:text-gray-200"
         >
           <i class="fas fa-info-circle mr-0.1"></i>
           <span class="ml-2" :class="{ 'hidden': isCollapsed }">关于本站</span>
@@ -120,8 +120,9 @@ export default {
       const iconMap = savedIcons ? JSON.parse(savedIcons) : {};
       return iconMap[category] || 'fas fa-question-circle';
     },
-    // 重置分类
+    // 重置分类 → 回到主页，显示全部网站
     resetCategory() {
+      this.$emit('select-parent', null);
       this.$emit('select-category', null);
     },
   },

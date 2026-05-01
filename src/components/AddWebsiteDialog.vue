@@ -1,9 +1,9 @@
 <template>
-  <!-- 去掉多余冲突样式，改为标准全屏居中 -->
-  <div v-if="visible" class="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50">
+  <!-- 强化：绝对全屏 + 强制居中，无任何偏移 -->
+  <div v-if="visible" class="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50 !m-0 !p-0">
 
-    <!-- 删除 m-auto，保持简洁居中 -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 max-w-md w-full mx-4 overflow-y-auto max-h-[90vh]">
+    <!-- 强制垂直水平居中 -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 max-w-md w-full mx-4 overflow-y-auto max-h-[90vh] !my-auto">
       
       <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">
         <i class="fas fa-plus-circle mr-2"></i> 网址添加
