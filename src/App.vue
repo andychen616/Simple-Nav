@@ -7,8 +7,8 @@
         :parent-to-categories="parentToCategories"
         :isCollapsed="isSidebarCollapsed"
         @select-parent="handleSelectParent"
-        @toggle-sidebar="toggleSidebar"
         @select-category="filterByCategory"
+        @toggle-sidebar="toggleSidebar"
       />
       <main class="flex-1 flex flex-col p-4 overflow-y-auto">
         <Navbar 
@@ -18,9 +18,9 @@
           @submit-website="handleSubmitWebsite"
           class="mb-6"/>
         
-        <!-- 右侧横排子分类 -->
-        <div v-if="currentChildCategories.length" class="flex flex-wrap items-center gap-2 mb-6">
-          <!-- 红色 + 加大字号 + 加粗 -->
+        <!-- 右侧横排子分类-->
+        <div class="flex flex-wrap items-center gap-2 mb-6">
+          <!-- 红色 + 加大字号 + 加粗，永远显示 -->
           <span class="text-lg font-bold text-red-600 dark:text-red-400 mr-2">
             {{ currentParentName }}丨
           </span>
@@ -30,6 +30,9 @@
             :key="cat"
             @click="filterByCategory(cat)"
             class="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+            :class="{
+              'bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400': selectedCategory === cat
+            }"
           >
             {{ cat }}
           </button>
@@ -69,7 +72,7 @@
                 <Card :item="item" @favorite-changed="handleFavoriteChanged" />
                 <AdBanner 
                   v-if="index === 9" 
-                  class="col-span-full h-[120px] bg-blue-900 mt-4"
+                  class="col-span-full h-[120px] bg-blue-50 dark:bg-blue-900 mt-4"
                 />
               </template>
             </div>
@@ -178,8 +181,8 @@ export default {
     // 点击小分类 → 只显示小分类
     filterByCategory(category) {
       this.selectedCategory = category;
-      this.selectedParent = null;
-      this.currentChildCategories = [];
+      // 关键：不清除大分类
+      this.selectedParent = this.currentParentName;
     },
 
     toggleDarkMode() {
@@ -203,8 +206,9 @@ export default {
       const sidebar = document.querySelector('.sidebar-container');
       const cards = document.querySelectorAll('.card-container');
       if (!sidebar.contains(event.target) && !Array.from(cards).some(card => card.contains(event.target))) {
-        this.selectedCategory = null;
-        this.selectedParent = null;
+        // 这里不清除分类，避免误触消失
+        // this.selectedCategory = null;
+        // this.selectedParent = null;
       }
     },
     handleResize() {
@@ -214,25 +218,14 @@ export default {
       this.$forceUpdate();
     }
   },
-  watch: {
-    // 监听路由分类参数，自动筛选
-    '$route.query.category'(newCategory) {
-      this.selectedCategory = newCategory || null;
-      this.selectedParent = null;
-      this.currentChildCategories = [];
-    }
-  },
   created() {
     this.loadData();
+    // 默认选中第一个大分类
+    if (this.parentCategories.length > 0) {
+      this.handleSelectParent(this.parentCategories[0]);
+    }
   },
   mounted() {
-    // 页面初始化时读取路由参数
-    if (this.$route.query.category) {
-      this.selectedCategory = this.$route.query.category;
-      this.selectedParent = null;
-      this.currentChildCategories = [];
-    }
-  
     if (this.darkMode) document.documentElement.classList.add('dark');
     const savedColumns = localStorage.getItem('columns')
     if (savedColumns) this.columns = parseInt(savedColumns)
