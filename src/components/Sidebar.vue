@@ -107,13 +107,12 @@ export default {
     },
     // 点击子分类
     selectCategory(category) {
-      // 跳转到首页，并带上分类参数
-      this.$router.push({
-        path: '/',
-        query: { category }
-      });
-      // 点击后隐藏浮层
+      // 1. 隐藏浮层
       this.hideChildCategories();
+      // 2. 路由跳转（给 App.vue 监听用）
+      this.$router.push({ path: '/', query: { category } });
+      // 3. 保留原有事件触发
+      this.$emit('select-category', category);
     },
     getCategoryIcon(category) {
       if (category === '我的收藏') {
@@ -123,9 +122,10 @@ export default {
       const iconMap = savedIcons ? JSON.parse(savedIcons) : {};
       return iconMap[category] || 'fas fa-question-circle';
     },
-    // 重置分类：跳回首页清空参数
+    // 重置分类
     resetCategory() {
       this.$router.push({ path: '/' });
+      this.$emit('select-category', null);
     },
   },
 };
