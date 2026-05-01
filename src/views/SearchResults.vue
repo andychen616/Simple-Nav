@@ -3,10 +3,11 @@
   <div class="h-screen flex flex-col">
     <div class="flex flex-1 overflow-hidden relative">
       <Sidebar 
-        :categories="categories" 
+        :parent-categories="parentCategories"
+        :parent-to-categories="parentToCategories"
         :isCollapsed="isSidebarCollapsed"
         @toggle-sidebar="toggleSidebar"
-        @select-category="selectCategory"
+        @select-parent="handleSelectParent"
       />
       <main class="flex-1 flex flex-col p-4 overflow-y-auto">
         <Navbar :darkMode="darkMode" @toggle-dark-mode="toggleDarkMode" class="mb-6"/>
@@ -55,7 +56,7 @@
 </template>
 
 <script>
-import { fetchData } from '../api/fetchData';
+import { fetchData, websiteData } from '../api/fetchData';
 import Navbar from '../components/Navbar.vue';
 import Sidebar from '../components/Sidebar.vue';
 import Card from '../components/Card.vue';
@@ -70,8 +71,9 @@ export default {
       allItems: [],
       darkMode: localStorage.getItem('darkMode') === 'true',
       isSidebarCollapsed: window.innerWidth < 768,
-      // 新增 categories 属性
       categories: [],
+      parentCategories: [],
+      parentToCategories: {},
       error: null
     }
   },
@@ -100,13 +102,12 @@ export default {
       
       try {
         this.allItems = await fetchData();
-        // 初始化 categories
         this.categories = [...new Set(this.allItems.map(item => item.category))];
-        console.log('搜索数据:', {
-          query: this.searchQuery,
-          items: this.allItems,
-          results: this.searchResults
-        });
+        
+        // 注入分类结构
+        this.parentCategories = websiteData.parentCategories;
+        this.parentToCategories = websiteData.parentToCategories;
+        
       } catch (error) {
         console.error('搜索失败:', error);
         this.error = error.message;
@@ -114,16 +115,21 @@ export default {
         this.loading = false;
       }
     },
-    // 添加 toggleSidebar 方法
     toggleSidebar() {
       this.isSidebarCollapsed = !this.isSidebarCollapsed;
-    }
-    ,selectCategory(category) {
-      this.$router.push({ path: '/', query: { category } });
+    },
+    handleSelectParent(parent) {
+      // 空方法，兼容 Sidebar 事件
     }
   },
   async created() {
     await this.handleSearch(this.$route.query.q);
-  }
+  },
+  mounted() {
+    if (this.darkMode) document.documentElement.classList.add('dark');
+    window.addEventListener('resize', () => {
+      this.isSidebarCollapsed = window.innerWidth < 768;
+    });
+  },
 };
 </script>
