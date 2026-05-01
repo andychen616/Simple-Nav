@@ -95,7 +95,8 @@ function groupDataByParentCategory(sites) {
   const siteMap = {};
 
   sites.forEach(item => {
-    const { parentCategory, category, ...site } = item;
+    const parentCategory = item.parentCategory;
+    const category = item.category;
 
     // 收集所有父分类
     parentSet.add(parentCategory);
@@ -110,7 +111,7 @@ function groupDataByParentCategory(sites) {
     if (!siteMap[category]) {
       siteMap[category] = [];
     }
-    siteMap[category].push(site);
+    siteMap[category].push(item);  // 正确：保留完整数据
   });
 
   // 赋值到全局
