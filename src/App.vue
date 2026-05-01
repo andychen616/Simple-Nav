@@ -179,7 +179,6 @@ export default {
     filterByCategory(category) {
       this.selectedCategory = category;
       this.selectedParent = null;
-      this.$forceUpdate();
     },
 
     toggleDarkMode() {
