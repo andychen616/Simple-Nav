@@ -7,7 +7,6 @@
         :parent-to-categories="parentToCategories"
         :isCollapsed="isSidebarCollapsed"
         @select-parent="handleSelectParent"
-        @select-category="filterByCategory"
         @toggle-sidebar="toggleSidebar"
       />
       <main class="flex-1 flex flex-col p-4 overflow-y-auto">
@@ -124,7 +123,7 @@ export default {
   },
   computed: {
     filteredItems() {
-      // 1. 选中 小分类 → 只显示小分类
+      // 1. 选中小分类 → 只显示小分类
       if (this.selectedCategory) {
         if (this.selectedCategory === '我的收藏') {
           const favoriteIds = JSON.parse(localStorage.getItem('favoriteItems')) || [];
@@ -133,7 +132,7 @@ export default {
         return this.items.filter(item => item.category === this.selectedCategory);
       }
 
-      // 2. 选中 大分类 → 显示大分类下所有
+      // 2. 选中大分类 → 显示大分类下所有
       if (this.selectedParent) {
         return this.items.filter(item => item.parentCategory === this.selectedParent);
       }
@@ -214,14 +213,24 @@ export default {
     }
   },
   watch: {
+    // 监听路由分类参数，自动筛选
     '$route.query.category'(newCategory) {
       this.selectedCategory = newCategory || null;
+      this.selectedParent = null;
+      this.currentChildCategories = [];
     }
   },
   created() {
     this.loadData();
   },
   mounted() {
+    // 页面初始化时读取路由参数
+    if (this.$route.query.category) {
+      this.selectedCategory = this.$route.query.category;
+      this.selectedParent = null;
+      this.currentChildCategories = [];
+    }
+  
     if (this.darkMode) document.documentElement.classList.add('dark');
     const savedColumns = localStorage.getItem('columns')
     if (savedColumns) this.columns = parseInt(savedColumns)
