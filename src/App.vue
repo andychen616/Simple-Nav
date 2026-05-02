@@ -127,23 +127,21 @@ export default {
   },
   computed: {
     filteredItems() {
-      // 1. 选中我的收藏 → 优先显示收藏
-      if (this.selectedCategory === '我的收藏') {
-        const favoriteIds = JSON.parse(localStorage.getItem('favoriteItems')) || [];
-        return this.items.filter(item => favoriteIds.includes(item.id));
-      }
-
-      // 2. 选中小分类 → 只显示小分类
+      // 1. 选中小分类 → 只显示小分类
       if (this.selectedCategory) {
+        if (this.selectedCategory === '我的收藏') {
+          const favoriteIds = JSON.parse(localStorage.getItem('favoriteItems')) || [];
+          return this.items.filter(item => favoriteIds.includes(item.id));
+        }
         return this.items.filter(item => item.category === this.selectedCategory);
       }
 
-      // 3. 选中大分类 → 显示大分类下所有
+      // 2. 选中大分类 → 显示大分类下所有
       if (this.selectedParent) {
         return this.items.filter(item => item.parentCategory === this.selectedParent);
       }
 
-      // 4. 都没选 → 显示全部
+      // 3. 都没选 → 显示全部
       return this.items;
     },
   },
@@ -155,14 +153,15 @@ export default {
         const data = await fetchData();
         
         this.items = data;
-        // 确保 我的收藏 永远在最前面
-        const allCats = [...new Set(data.map(item => item.category))];
-        this.categories = ['我的收藏', ...allCats];
+        this.categories = ['我的收藏', ...new Set(data.map(item => item.category))];
         
         this.parentCategories = websiteData.parentCategories;
         this.parentToCategories = websiteData.parentToCategories;
         
         localStorage.setItem('appCategories', JSON.stringify(this.categories));
+        if (!this.categories.includes('我的收藏')) {
+          this.categories.unshift('我的收藏');
+        }
       } catch (error) {
         console.error('数据加载失败:', error);
         this.error = error.message;
@@ -175,19 +174,15 @@ export default {
     handleSelectParent(parent) {
       this.currentParentName = parent;
       this.selectedParent = parent;
-      this.selectedCategory = null; // 切换大分类时清空小分类
+      this.selectedCategory = null;
       this.currentChildCategories = this.parentToCategories[parent] || [];
     },
     
-    // 点击小分类 / 我的收藏
+    // 点击小分类 → 只显示小分类
     filterByCategory(category) {
       this.selectedCategory = category;
-
-      // 选中“我的收藏”时，清空大分类，才能正常显示
-      if (category === '我的收藏') {
-        this.selectedParent = null;
-        this.currentParentName = '';
-      }
+      // 关键：不清除大分类
+      this.selectedParent = this.currentParentName;
     },
 
     toggleDarkMode() {
@@ -211,7 +206,9 @@ export default {
       const sidebar = document.querySelector('.sidebar-container');
       const cards = document.querySelectorAll('.card-container');
       if (!sidebar.contains(event.target) && !Array.from(cards).some(card => card.contains(event.target))) {
-        // 不清除，避免误触
+        // 这里不清除分类，避免误触消失
+        // this.selectedCategory = null;
+        // this.selectedParent = null;
       }
     },
     handleResize() {
@@ -223,6 +220,10 @@ export default {
   },
   created() {
     this.loadData();
+    // 移除：默认不选中任何分类
+    // if (this.parentCategories.length > 0) {
+    //   this.handleSelectParent(this.parentCategories[0]);
+    // }
   },
   mounted() {
     if (this.darkMode) document.documentElement.classList.add('dark');
