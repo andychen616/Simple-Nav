@@ -5,6 +5,7 @@
       <Sidebar 
         :parent-categories="parentCategories"
         :parent-to-categories="parentToCategories"
+        :category-icon-map="categoryIconMap"
         :isCollapsed="isSidebarCollapsed"
         @select-parent="handleSelectParent"
         @select-category="filterByCategory"
@@ -115,6 +116,7 @@ export default {
       categories: [],
       parentCategories: [],
       parentToCategories: {},
+      categoryIconMap: {},
       currentChildCategories: [],
       currentParentName: '',
       selectedCategory: null,
@@ -160,6 +162,8 @@ export default {
         this.categories = ['我的收藏', ...new Set(data.map(item => item.category))];
         
         this.parentCategories = websiteData.parentCategories;
+        this.categoryIconMap = websiteData.categoryIconMap;
+
         // 把我的收藏添加到侧边栏大分类
         if (!this.parentCategories.includes('我的收藏')) {
           this.parentCategories.unshift('我的收藏');
