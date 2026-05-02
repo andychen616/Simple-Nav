@@ -29,17 +29,6 @@
       </div>
 
       <ul>
-        <!-- 我的收藏 -->
-        <li class="mb-2">
-          <button
-            @click="selectCategory('我的收藏')"
-            class="flex items-center w-full p-2 rounded hover:bg-gray-100 dark:bg-gray-700 transition-colors text-gray-800 dark:text-gray-200"
-          >
-            <i class="fas fa-star text-yellow-500"></i>
-            <span class="ml-2" :class="{ 'hidden': isCollapsed }">我的收藏</span>
-          </button>
-        </li>
-
         <!-- 遍历大分类 parentCategory -->
         <li v-for="parent in parentCategories" :key="parent" class="mb-2">
           <button
