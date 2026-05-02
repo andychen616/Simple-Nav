@@ -79,7 +79,12 @@
 
 <script>
 export default {
-  props: ['isCollapsed', 'parentCategories', 'parentToCategories'], // 接收大分类数据
+  props: [
+    'isCollapsed',
+    'parentCategories',
+    'parentToCategories',
+    'categoryIconMap'  // 只加这一行
+  ],
   data() {
     return {
       showToggle: false,
@@ -113,12 +118,18 @@ export default {
       this.$emit('select-category', category);
     },
     getCategoryIcon(category) {
+      // 优先使用维格云配置的图标，原有逻辑完全保留
+      if (this.categoryIconMap && this.categoryIconMap[category]) {
+        return this.categoryIconMap[category];
+      }
+      
+      // 原有逻辑不变
       if (category === '我的收藏') {
-        return 'fas fa-star';
+        return 'fa-star';
       }
       const savedIcons = localStorage.getItem('categoryIcons');
       const iconMap = savedIcons ? JSON.parse(savedIcons) : {};
-      return iconMap[category] || 'fas fa-question-circle';
+      return iconMap[category] || 'fa-question-circle';
     },
     // 重置分类 → 回到主页，显示全部网站
     resetCategory() {
