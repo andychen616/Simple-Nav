@@ -138,6 +138,10 @@ export default {
 
       // 2. 选中大分类 → 显示大分类下所有
       if (this.selectedParent) {
+        if (this.selectedParent === '我的收藏') {
+          const favoriteIds = JSON.parse(localStorage.getItem('favoriteItems')) || [];
+          return this.items.filter(item => favoriteIds.includes(item.id));
+        }
         return this.items.filter(item => item.parentCategory === this.selectedParent);
       }
 
@@ -156,7 +160,13 @@ export default {
         this.categories = ['我的收藏', ...new Set(data.map(item => item.category))];
         
         this.parentCategories = websiteData.parentCategories;
+        // 把我的收藏添加到侧边栏大分类
+        if (!this.parentCategories.includes('我的收藏')) {
+          this.parentCategories.unshift('我的收藏');
+        }
         this.parentToCategories = websiteData.parentToCategories;
+        // 我的收藏设置空的子分类
+        this.parentToCategories['我的收藏'] = [];
         
         localStorage.setItem('appCategories', JSON.stringify(this.categories));
         if (!this.categories.includes('我的收藏')) {
@@ -175,6 +185,11 @@ export default {
       this.currentParentName = parent;
       this.selectedParent = parent;
       this.selectedCategory = null;
+      // 我的收藏没有子分类
+      if (parent === '我的收藏') {
+        this.currentChildCategories = [];
+        return;
+      }
       this.currentChildCategories = this.parentToCategories[parent] || [];
     },
     
