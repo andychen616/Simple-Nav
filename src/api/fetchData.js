@@ -56,11 +56,14 @@ export async function fetchData() {
         url: record.fields.url,
         description: record.fields.description || '',
         icon: record.fields.icon || DEFAULT_ICON_URL,
-        parentIcon: record.fields.parentIcon || '', // 从维格云读取图标
+        parentIcon: record.fields.parentIcon || '',
         sortOrder: record.fields.order ? parseInt(record.fields.order) : 0,
-        updatedAt: record.updatedAt || record.fields.updatedAt || null
+        updatedAt: record.updatedAt || record.fields.updatedAt || null,
+        sort: record.sort  // 添加维格表内置拖拽排序字段
       };
-    }).filter(Boolean).sort((a, b) => b.sortOrder - a.sortOrder);
+    }).filter(Boolean)
+      .sort((a, b) => a.sort - b.sort) // 按表格拖拽顺序排序
+      .sort((a, b) => b.sortOrder - a.sortOrder);
 
     websiteData.originalList = rawSites;
 
@@ -104,14 +107,14 @@ function groupDataByParentCategory(sites) {
     siteMap[category].push(item);
   });
 
-  websiteData.parentCategories = Array.from(parentSet).sort();
+  websiteData.parentCategories = Array.from(parentSet); // 去掉 .sort()，保持表格拖拽顺序
   websiteData.parentToCategories = Object.fromEntries(
     Object.entries(parentMap).map(([k, v]) => [k, Array.from(v).sort()])
   );
   websiteData.categoryToSites = siteMap;
 }
 
-// 🔥 新增：构建分类图标（完全不影响原有逻辑）
+// 构建分类图标
 function buildCategoryIconMap(sites) {
   const iconMap = {};
 
